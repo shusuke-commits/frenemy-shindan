@@ -644,8 +644,7 @@ async function downloadImageGeneric(btnId, buildBlobFn, filename, statusElId){
 
           if(navigator.canShare && navigator.canShare({ files:[file] })){
                   await navigator.share({ files: [file], title: "フレネミー診断" });
-                  document.getElementById(statusElId).textContent =
-                            "共有シートから「画像を保存」を選ぶと、カメラロールに保存されます。";
+                  document.getElementById(statusElId).textContent = "";
           } else {
                   downloadBlob(blob, filename);
                   document.getElementById(statusElId).textContent =
