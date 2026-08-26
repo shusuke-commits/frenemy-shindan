@@ -632,25 +632,35 @@
     }
   }
 
-  async function downloadImageGeneric(btnId, buildBlobFn, filename, statusElId){
+async function downloadImageGeneric(btnId, buildBlobFn, filename, statusElId){
     const btn = document.getElementById(btnId);
     const original = btn.textContent;
     btn.textContent = "画像を作成中…";
     btn.disabled = true;
     try {
-      const blob = await buildBlobFn();
-      if(!blob) throw new Error("no result");
-      downloadBlob(blob, filename);
-      document.getElementById(statusElId).textContent =
-        "画像を保存しました。InstagramやLINEでシェアしてください。";
+          const blob = await buildBlobFn();
+          if(!blob) throw new Error("no result");
+          const file = new File([blob], filename, { type: "image/png" });
+
+          if(navigator.canShare && navigator.canShare({ files:[file] })){
+                  await navigator.share({ files: [file], title: "フレネミー診断" });
+                  document.getElementById(statusElId).textContent =
+                            "共有シートから「画像を保存」を選ぶと、カメラロールに保存されます。";
+          } else {
+                  downloadBlob(blob, filename);
+                  document.getElementById(statusElId).textContent =
+                            "画像を保存しました。InstagramやLINEでシェアしてください。";
+          }
     } catch(err){
-      document.getElementById(statusElId).textContent =
-        "画像の作成に失敗しました。テキストでのシェアをお試しください。";
+          if(err && err.name !== "AbortError"){
+                  document.getElementById(statusElId).textContent =
+                            "画像の作成に失敗しました。テキストでのシェアをお試しください。";
+          }
     } finally {
-      btn.textContent = original;
-      btn.disabled = false;
+          btn.textContent = original;
+          btn.disabled = false;
     }
-  }
+}
 
   function shareImage(){
     logEvent("share_image");
