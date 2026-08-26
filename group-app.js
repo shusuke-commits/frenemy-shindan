@@ -6,8 +6,8 @@
 // SQL Editorで実行した後、以下の2つの値を書き換えてください。
 // (Supabaseダッシュボード → Project Settings → API から取得できます)
 // ==========================================================
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; // 例: https://xxxxxxxx.supabase.co
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // 例: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+const SUPABASE_URL = "https://rxstatkbpelbxkbgidta.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
 
 (function(){
   "use strict";
