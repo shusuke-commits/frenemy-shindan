@@ -6,8 +6,8 @@
   // 未設定のままでも診断は通常通り動作します(ログ送信だけ無効になります)。
   // group-app.js と同じSupabaseプロジェクトの情報を設定してください。
   // ==========================================================
-  const ANALYTICS_SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-  const ANALYTICS_SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const ANALYTICS_SUPABASE_URL = "https://rxstatkbpelbxkbgidta.supabase.co";
+    const ANALYTICS_SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
 
   let analyticsClientPromise = null;
   function getAnalyticsClient(){
