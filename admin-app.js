@@ -9,8 +9,8 @@
 // パスワード)を1つ作成しておいてください。誰でもサインアップできる
 // 画面は用意していません(このダッシュボードは限られた人だけが使う想定のため)。
 // ==========================================================
-const ADMIN_SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-const ADMIN_SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const ADMIN_SUPABASE_URL = "https://rxstatkbpelbxkbgidta.supabase.co";
+const ADMIN_SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
 
 (function(){
   "use strict";
