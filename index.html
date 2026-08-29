@@ -109,11 +109,15 @@
   .btn-sub{margin-top:16px; font-size:12px; color:rgba(244,236,223,0.65);}
 
   /* ---------- Quiz ---------- */
-  .quiz-head{padding-top:64px; margin-bottom:36px;}
-  .progress-track{height:3px; width:100%; background:var(--hairline); border-radius:3px; overflow:hidden; margin-bottom:14px;}
-  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--mask-friend), var(--mask-enemy)); transition:width .45s cubic-bezier(.65,0,.35,1);}
-  .progress-label{display:flex; justify-content:space-between; font-size:12px; color:rgba(244,236,223,0.72); letter-spacing:0.04em; font-weight:500;}
-  .progress-label b{color:var(--mask-friend-soft); font-weight:700;}
+.quiz-head{padding-top:64px; margin-bottom:36px;}
+    .quiz-head-top{display:flex; align-items:center; gap:14px; margin-bottom:14px;}
+    .icon-btn{flex:none; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(244,236,223,0.06); border:1px solid var(--hairline); color:rgba(244,236,223,0.75); cursor:pointer; -webkit-tap-highlight-color:transparent; outline:none; padding:0;}
+    .icon-btn:hover{color:var(--mask-friend-soft); border-color:var(--mask-friend);}
+    .quiz-head-top .progress-track{flex:1; margin-bottom:0;}
+    .progress-track{height:3px; width:100%; background:var(--hairline); border-radius:3px; overflow:hidden; margin-bottom:14px;}
+    .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--mask-friend), var(--mask-enemy)); transition:width .45s cubic-bezier(.65,0,.35,1);}
+    .progress-label{display:flex; justify-content:space-between; font-size:12px; color:rgba(244,236,223,0.72); letter-spacing:0.04em; font-weight:500;}
+    .progress-label b{color:var(--mask-friend-soft); font-weight:700;}
 
   .q-card{
     background:linear-gradient(155deg, var(--void-3), var(--void-2));
@@ -124,6 +128,7 @@
     display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:0.14em;
     text-transform:uppercase; color:rgba(244,236,223,0.72); margin-bottom:18px; font-weight:700;
   }
+    .q-axis-hint{font-size:12.5px; color:rgba(244,236,223,0.55); line-height:1.6; margin:0 0 22px;}
   .q-axis-tag i{width:6px; height:6px; border-radius:50%; background:var(--mask-friend); display:inline-block;}
   .q-text{font-family:var(--serif); font-size:clamp(20px,4vw,25px); line-height:1.6; font-weight:700; margin:0 0 34px;}
 
@@ -344,12 +349,16 @@
 
   <!-- QUIZ -->
   <section class="screen" id="screen-quiz">
-    <div class="quiz-head">
-      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="progress-label"><span>QUESTION <b id="qNum">1</b> / 20</span><span id="qAxisLabel"></span></div>
+<div class="quiz-head">
+        <div class="quiz-head-top">
+                          <button class="icon-btn" id="btnQuizHome" aria-label="トップに戻る" title="トップに戻る">⌂</button>
+                  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+              <div class="progress-label"><span>QUESTION <b id="qNum">1</b>b> / 20</span><span id="qAxisLabel"></span></div>
     </div>
     <div class="q-card">
       <div class="q-axis-tag"><i></i><span id="qAxisTag"></span></div>
+            <p class="q-axis-hint" id="qAxisHint"></p>
       <p class="q-text" id="qText"></p>
       <div class="scale" id="qScale"></div>
     </div>
