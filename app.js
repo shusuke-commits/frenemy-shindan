@@ -129,6 +129,7 @@
     document.getElementById("qNum").textContent = idx + 1;
     document.getElementById("qAxisLabel").textContent = `AXIS ${axis.tag}`;
     document.getElementById("qAxisTag").textContent = `軸 ${Math.floor(idx/5)+1} / 4　―　${axis.tag}`;
+        document.getElementById("qAxisHint").textContent = axis.hint;
     document.getElementById("qText").textContent = q.text;
     document.getElementById("progressFill").style.width = ((idx) / QUESTIONS.length * 100) + "%";
 
@@ -694,6 +695,9 @@ async function downloadImageGeneric(btnId, buildBlobFn, filename, statusElId){
     showScreen("quiz");
   });
   document.getElementById("btnBack").addEventListener("click", goBack);
+    document.getElementById("btnQuizHome").addEventListener("click", () => {
+          showScreen("intro");
+    });
   document.getElementById("btnCopy").addEventListener("click", copyResult);
   document.getElementById("btnShareX").addEventListener("click", shareToX);
   document.getElementById("btnShareLine").addEventListener("click", shareToLine);
