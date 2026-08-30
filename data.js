@@ -1,6 +1,6 @@
 // ==========================================================
 // フレネミー診断 — データ定義
-// 4軸: S/U(表 or 裏), A/D(攻 or 守), L/E(理 or 情), I/G(単 or 群)
+// 4軸: S/U(表 or 裏), A/D(攻 or 守), L/E(理 or 情), I/G(独 or 群)
 // 各質問は 1(全く当てはまらない)〜5(とても当てはまる) で回答
 // 回答値-3 を axisDir 方向のスコアとして加算する
 // ==========================================================
@@ -9,7 +9,7 @@ const AXES = [
   { key:"SU", left:"S", right:"U", leftLabel:"表", rightLabel:"裏", tag:"表 / 裏", hint:"表面を取り繕うか / 本音をそのまま出すか" },
   { key:"AD", left:"A", right:"D", leftLabel:"攻", rightLabel:"守", tag:"攻 / 守", hint:"張り合いにいくか / 距離を取って避けるか" },
   { key:"LE", left:"L", right:"E", leftLabel:"理", rightLabel:"情", tag:"理 / 情", hint:"理屈で判断するか / 感情で判断するか" },
-  { key:"IG", left:"I", right:"G", leftLabel:"単", rightLabel:"群", tag:"単 / 群", hint:"1対1で動くか / 集団の空気を意識するか" },
+  { key:"IG", left:"I", right:"G", leftLabel:"独", rightLabel:"群", tag:"独 / 群", hint:"1対1で動くか / 集団の空気を意識するか" },
 ];
 
 // axis: 対応する軸key / dir: "left"なら回答が高いほどleft文字に、"right"なら逆
