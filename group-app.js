@@ -60,6 +60,12 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
     return supabaseReady;
   }
 
+    function logEvent(eventType, typeCode){
+          getSupabase().then(sb => {
+                  sb.from("analytics_events").insert({ event_type: eventType, type_code: typeCode || null }).then(() => {}, () => {});
+          }).catch(() => {});
+    }
+
   function generateRoomCode(){
     // 紛らわしい文字(0/O, 1/I)を避けた6文字コード
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -191,6 +197,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
       state.room = room;
       state.me = participant;
       saveIdentity(room.code, participant.id, nickname);
+            logEvent("group_room_create", selectedMode);
       enterLobby();
     } catch(e){
       showError("createError", "部屋の作成に失敗しました。通信環境をご確認ください");
@@ -226,6 +233,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
 
       state.me = participant;
       saveIdentity(state.room.code, participant.id, nickname);
+            logEvent("group_room_join", state.room.mode);
       enterLobby();
     } catch(e){
       showError("joinError", "参加に失敗しました。通信環境をご確認ください");
@@ -309,6 +317,14 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
       setTimeout(() => btn.textContent = original, 1800);
     }).catch(() => alert(url));
   });
+
+    document.getElementById("btnShareRoomLine").addEventListener("click", () => {
+          logEvent("group_share_room_line");
+          const url = location.origin + location.pathname + "?room=" + state.room.code;
+          const text = "フレネミー診断、一緒にやろう！\n" + url;
+          const lineUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(text);
+          window.open(lineUrl, "_blank", "noopener,noreferrer");
+    });
 
   function beginQuizFlow(){
     if(state.room.mode === "self"){
@@ -498,14 +514,15 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
         .filter(p => resultByParticipant[p.id])
         .map(p => {
           const r = resultByParticipant[p.id];
-          return { nickname: p.nickname, code: r.code, scores: r.scores, degree: frenemyDegree(r.scores) };
+                    return { participantId: p.id, nickname: p.nickname, code: r.code, scores: r.scores, degree: frenemyDegree(r.scores) };
         })
         .sort((a, b) => b.degree - a.degree);
 
       renderRanking(ranking, "フレネミー度ランキング", (item) => `${item.degree}`, (item) => TYPES[item.code].name);
 
       const avgScores = averageScores(ranking.map(r => r.scores));
-      renderGroupType(avgScores);
+            const groupCode = renderGroupType(avgScores);
+            logEvent("group_quiz_complete_self", groupCode);
 
       showScreen("g-results");
     } catch(e){
@@ -539,13 +556,14 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
       const ranking = (participants || []).map(p => {
         const scores = scoresByParticipant[p.id];
         const code = computeCode(scores);
-        return { nickname: p.nickname, code, scores, degree: frenemyDegree(scores) };
+              return { participantId: p.id, nickname: p.nickname, code, scores, degree: frenemyDegree(scores) };
       }).sort((a, b) => b.degree - a.degree);
 
       renderRanking(ranking, "投票で見えたタイプ", (item) => `${item.degree}`, (item) => TYPES[item.code].name);
 
       const avgScores = averageScores(ranking.map(r => r.scores));
-      renderGroupType(avgScores);
+            const groupCode = renderGroupType(avgScores);
+            logEvent("group_quiz_complete_vote", groupCode);
 
       showScreen("g-results");
     } catch(e){
@@ -553,32 +571,142 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
     }
   }
 
-  function renderRanking(ranking, title, scoreFn, typeNameFn){
-    document.getElementById("rankTitle").textContent = title;
-    const list = document.getElementById("rankList");
-    list.innerHTML = "";
-    ranking.forEach((item, i) => {
-      const li = document.createElement("li");
-      li.className = "rank-item" + (i === 0 ? " top" : "");
-      li.innerHTML = `
-        <div class="rank-num">${i+1}</div>
-        <div class="rank-body">
-          <div class="rank-name">${escapeHtml(item.nickname)}</div>
-          <div class="rank-type">${escapeHtml(typeNameFn(item))}</div>
-        </div>
-        <div class="rank-score">${scoreFn(item)}</div>
-      `;
-      list.appendChild(li);
-    });
+function renderRanking(ranking, title, scoreFn, typeNameFn){
+      state.lastRanking = ranking;
+      document.getElementById("rankTitle").textContent = title;
+      const list = document.getElementById("rankList");
+      list.innerHTML = "";
+      ranking.forEach((item, i) => {
+              const isMe = state.me && item.participantId === state.me.id;
+              const li = document.createElement("li");
+              li.className = "rank-item" + (i === 0 ? " top" : "") + (isMe ? " is-me" : "");
+              li.innerHTML = `
+                      <div class="rank-num">${i+1}</div>
+                              <div class="rank-body">
+                                        <div class="rank-name">${escapeHtml(item.nickname)}${isMe ? '<span class="rank-me-tag">あなた</span>' : ""}</div>
+                                                  <div class="rank-type">${escapeHtml(typeNameFn(item))}</div>
+                                                          </div>
+                                                                  <div class="rank-score" data-target="${scoreFn(item)}">0</div>
+                                                                        `;
+              list.appendChild(li);
+      });
+      requestAnimationFrame(() => {
+              list.querySelectorAll(".rank-score").forEach(el => {
+                        const target = parseInt(el.dataset.target, 10) || 0;
+                        const start = performance.now();
+                        const duration = 900;
+                        function tick(now){
+                                    const t = Math.min(1, (now - start) / duration);
+                                    const eased = 1 - Math.pow(1 - t, 3);
+                                    el.textContent = Math.round(target * eased);
+                                    if(t < 1) requestAnimationFrame(tick);
+                        }
+                        requestAnimationFrame(tick);
+              });
+      });
+}
+
+function renderGroupType(avgScores){
+      const code = computeCode(avgScores);
+      const gt = GROUP_TYPES[code];
+      document.getElementById("groupTypeName").textContent = gt.name;
+      document.getElementById("groupTypeSub").textContent = gt.desc;
+      state.lastGroupResult = { code, name: gt.name, sub: gt.desc };
+      return code;
+}
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
+      const chars = text.split("");
+      let line = "";
+      const lines = [];
+      chars.forEach(ch => {
+              const test = line + ch;
+              if(ctx.measureText(test).width > maxWidth && line !== ""){
+                        lines.push(line);
+                        line = ch;
+              } else {
+                        line = test;
+              }
+      });
+      if(line) lines.push(line);
+      const totalHeight = lineHeight * (lines.length - 1);
+      const startY = y - totalHeight/2;
+      lines.forEach((l, i) => ctx.fillText(l, x, startY + i*lineHeight));
+}
+
+  function buildGroupResultCardBlob(){
+        return new Promise((resolve) => {
+                const r = state.lastGroupResult;
+                if(!r){ resolve(null); return; }
+
+                const W = 1080, H = 1350;
+                const canvas = document.createElement("canvas");
+                canvas.width = W; canvas.height = H;
+                const ctx = canvas.getContext("2d");
+
+                const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+                bgGrad.addColorStop(0, "#2c1830");
+                bgGrad.addColorStop(1, "#211226");
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, W, H);
+
+                const radial = ctx.createRadialGradient(W*0.85, H*0.1, 0, W*0.85, H*0.1, W*0.7);
+                radial.addColorStop(0, "rgba(58,169,160,0.22)");
+                radial.addColorStop(1, "rgba(58,169,160,0)");
+                ctx.fillStyle = radial;
+                ctx.fillRect(0, 0, W, H);
+
+                ctx.textAlign = "center";
+
+                ctx.fillStyle = "#7fd4cb";
+                ctx.font = "600 28px sans-serif";
+                ctx.fillText("GROUP RESULT — FRENEMY TYPE TEST", W/2, 160);
+
+                ctx.fillStyle = "rgba(244,236,223,0.6)";
+                ctx.font = "600 26px sans-serif";
+                ctx.fillText("このグループの正体は", W/2, 420);
+
+                ctx.fillStyle = "#f4ecdf";
+                ctx.font = "800 62px serif";
+                wrapCanvasText(ctx, r.name, W/2, 520, W-140, 74);
+
+                ctx.fillStyle = "rgba(244,236,223,0.75)";
+                ctx.font = "500 30px sans-serif";
+                wrapCanvasText(ctx, r.sub, W/2, 660, W-200, 44);
+
+                const top3 = state.lastRanking ? state.lastRanking.slice(0, 3) : [];
+                ctx.fillStyle = "rgba(244,236,223,0.55)";
+                ctx.font = "600 26px sans-serif";
+                ctx.fillText("フレネミー度ランキング TOP" + top3.length, W/2, 900);
+
+                top3.forEach((item, i) => {
+                          const y = 970 + i*80;
+                          ctx.fillStyle = i === 0 ? "#e8a33d" : "rgba(244,236,223,0.7)";
+                          ctx.font = "800 34px serif";
+                          ctx.textAlign = "right";
+                          ctx.fillText(String(i+1), W/2 - 160, y);
+                          ctx.textAlign = "left";
+                          ctx.fillStyle = "#f4ecdf";
+                          ctx.font = "700 32px sans-serif";
+                          ctx.fillText(item.nickname, W/2 - 120, y);
+                          ctx.textAlign = "right";
+                          ctx.fillStyle = "#e8a33d";
+                          ctx.font = "800 32px serif";
+                          ctx.fillText(String(item.degree), W/2 + 160, y);
+                          ctx.textAlign = "center";
+                });
+
+                ctx.fillStyle = "rgba(244,236,223,0.5)";
+                ctx.font = "500 28px sans-serif";
+                ctx.fillText("みんなでフレネミー診断", W/2, H-120);
+                ctx.fillStyle = "rgba(244,236,223,0.35)";
+                ctx.font = "400 24px sans-serif";
+                ctx.fillText(location.origin.replace(/^https?:\/\//, ""), W/2, H-75);
+
+                canvas.toBlob((blob) => resolve(blob), "image/png", 0.95);
+        });
   }
 
-  function renderGroupType(avgScores){
-    const code = computeCode(avgScores);
-    const gt = GROUP_TYPES[code];
-    document.getElementById("groupTypeName").textContent = gt.name;
-    document.getElementById("groupTypeSub").textContent = gt.desc;
-  }
-
+  
   // ==========================================================
   // 起動時: URLに ?room=CODE があれば参加フローへ誘導
   // ==========================================================
@@ -588,4 +716,92 @@ const SUPABASE_ANON_KEY = "sb_publishable_Wo6ELR2G2yoJhNKTkoeJnA_ae9j-fhz";
     await enterJoinScreen(urlCode);
   })();
 
+function downloadBlob(blob, filename){
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+}
+
+  async function shareGroupImage(){
+        const btn = document.getElementById("btnShareGroupImage");
+        const original = btn.textContent;
+        btn.textContent = "画像を作成中…";
+        btn.disabled = true;
+        try {
+                const blob = await buildGroupResultCardBlob();
+                if(!blob) throw new Error("no result");
+                const file = new File([blob], "frenemy-group-result.png", { type: "image/png" });
+                logEvent("group_share_image");
+                if(navigator.canShare && navigator.canShare({ files:[file] })){
+                          await navigator.share({ files: [file], title: "フレネミー診断 グループ結果" });
+                          document.getElementById("groupShareStatus").textContent = "";
+                } else {
+                          downloadBlob(blob, "frenemy-group-result.png");
+                          document.getElementById("groupShareStatus").textContent = "画像を保存しました。InstagramやLINEでシェアしてください。";
+                }
+        } catch(e){
+                if(e && e.name !== "AbortError"){
+                          document.getElementById("groupShareStatus").textContent = "画像の作成に失敗しました。テキストでのシェアをお試しください。";
+                }
+        } finally {
+                btn.textContent = original;
+                btn.disabled = false;
+        }
+  }
+
+  async function downloadGroupImage(){
+        const btn = document.getElementById("btnDownloadGroupImage");
+        const original = btn.textContent;
+        btn.textContent = "画像を作成中…";
+        btn.disabled = true;
+        try {
+                const blob = await buildGroupResultCardBlob();
+                if(!blob) throw new Error("no result");
+                downloadBlob(blob, "frenemy-group-result.png");
+                logEvent("group_download_image");
+                document.getElementById("groupShareStatus").textContent = "画像を保存しました。InstagramやLINEでシェアしてください。";
+        } catch(e){
+                document.getElementById("groupShareStatus").textContent = "画像の作成に失敗しました。";
+        } finally {
+                btn.textContent = original;
+                btn.disabled = false;
+        }
+  }
+
+  function groupShareText(){
+        const r = state.lastGroupResult;
+        if(!r) return "みんなでフレネミー診断やってみた";
+        return `私たちのグループは「${r.name}」でした！ #フレネミー診断`;
+  }
+
+    function shareGroupToLine(){
+          logEvent("group_share_result_line");
+          const text = groupShareText() + "\n" + location.origin;
+          const url = "https://line.me/R/msg/text/?" + encodeURIComponent(text);
+          window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function shareGroupToX(){
+          logEvent("group_share_result_x");
+          const url = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(groupShareText()) + "&url=" + encodeURIComponent(location.origin);
+          window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    document.getElementById("btnShareGroupImage").addEventListener("click", shareGroupImage);
+    document.getElementById("btnDownloadGroupImage").addEventListener("click", downloadGroupImage);
+    document.getElementById("btnShareGroupLine").addEventListener("click", shareGroupToLine);
+    document.getElementById("btnShareGroupX").addEventListener("click", shareGroupToX);
+
+    document.getElementById("btnRetakeSameRoom").addEventListener("click", () => {
+          logEvent("group_retake_same_room");
+          stopWaitPolling();
+          beginQuizFlow();
+    });
+
+  
 })();
