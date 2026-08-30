@@ -290,6 +290,26 @@
     document.getElementById("resCode").textContent = "TYPE — " + result.code;
     document.getElementById("resTitle").innerHTML = type.name;
     document.getElementById("resSub").textContent = type.sub;
+
+        const comboWrap = document.getElementById("resAxisCombo");
+        comboWrap.innerHTML = "";
+        AXES.forEach((axis, i) => {
+                const letter = result.code[i];
+                const label = (letter === axis.left) ? axis.leftLabel : axis.rightLabel;
+                const chip = document.createElement("span");
+                chip.className = "combo-chip";
+                chip.textContent = label;
+                comboWrap.appendChild(chip);
+                if(i < AXES.length - 1){
+                          const sep = document.createElement("span");
+                          sep.className = "combo-chip";
+                          sep.style.background = "transparent";
+                          sep.style.border = "none";
+                          sep.style.padding = "5px 0";
+                          sep.textContent = "×";
+                          comboWrap.appendChild(sep);
+                }
+        });
     document.getElementById("resDesc").textContent = type.desc;
 
     const ul = document.getElementById("resAlaruns");
@@ -688,12 +708,14 @@ async function downloadImageGeneric(btnId, buildBlobFn, filename, statusElId){
     showScreen("intro");
   }
 
-  document.getElementById("btnStart").addEventListener("click", () => {
-    logEvent("quiz_start");
-    state.current = 0;
-    renderQuestion();
-    showScreen("quiz");
-  });
+  function startQuizFlow(fromDuo){
+        logEvent(fromDuo ? "quiz_start_duo" : "quiz_start");
+        state.current = 0;
+        renderQuestion();
+        showScreen("quiz");
+  }
+    document.getElementById("btnStart").addEventListener("click", () => startQuizFlow(false));
+    document.getElementById("btnStartDuo").addEventListener("click", () => startQuizFlow(true));
   document.getElementById("btnBack").addEventListener("click", goBack);
     document.getElementById("btnQuizHome").addEventListener("click", () => {
           showScreen("intro");
