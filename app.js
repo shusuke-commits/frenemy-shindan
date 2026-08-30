@@ -289,6 +289,7 @@
     const type = TYPES[result.code];
     document.getElementById("resCode").textContent = "TYPE — " + result.code;
     document.getElementById("resTitle").innerHTML = type.name;
+        document.getElementById("resTypeImage").src = "types/" + result.code + ".png";
     document.getElementById("resSub").textContent = type.sub;
 
         const comboWrap = document.getElementById("resAxisCombo");
