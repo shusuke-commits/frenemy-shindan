@@ -8,19 +8,23 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#211226">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Mochiy+Pop+One&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#f4ecdf;
-    --void:#211226;
-    --void-2:#2c1830;
-    --void-3:#38203e;
-    --mask-friend:#e8a33d;
-    --mask-friend-soft:#f0c47a;
-    --mask-enemy:#3aa9a0;
-    --mask-enemy-soft:#7fd4cb;
-    --hairline:rgba(244,236,223,0.14);
-    --shadow-deep: 0 30px 60px rgba(10,4,14,0.55);
+        --ink:#ffffff;
+        --void:#0d1330;
+        --void-2:#141b45;
+        --void-3:#1b235c;
+        --mask-friend:#f5a623;
+        --mask-friend-soft:#ffd166;
+        --mask-enemy:#2dd4bf;
+        --mask-enemy-soft:#7fe8dc;
+        --accent-red:#ef4d5e;
+        --accent-blue:#4a90e2;
+        --accent-green:#5bc16a;
+        --hairline:rgba(255,255,255,0.14);
+        --shadow-deep: 0 30px 60px rgba(3,5,20,0.55);
+        --heading: 'Mochiy Pop One', sans-serif;
     --serif: 'Shippori Mincho', serif;
     --sans: 'Zen Kaku Gothic New', sans-serif;
   }
@@ -37,7 +41,7 @@
   @keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
 
   .eyebrow{font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--mask-friend-soft); font-weight:700; margin-bottom:14px; text-align:center;}
-  h1.g-title{font-family:var(--serif); font-weight:800; font-size:28px; text-align:center; margin:0 0 8px;}
+  h1.g-title{font-family:var(--heading); font-weight:400; font-size:32px; text-align:center; margin:0 0 8px; color:var(--mask-friend-soft); -webkit-text-stroke:1.5px #ffffff;}
   p.g-lede{font-size:14px; line-height:1.8; color:rgba(244,236,223,0.8); text-align:center; margin:0 0 32px;}
 
   .g-card{
