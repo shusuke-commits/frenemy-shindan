@@ -287,7 +287,7 @@
   function renderResult(result, fromSaved){
     document.getElementById("savedNote").style.display = fromSaved ? "block" : "none";
     const type = TYPES[result.code];
-    document.getElementById("resCode").textContent = "TYPE — " + result.code;
+        document.getElementById("resCode").textContent = result.code;
     document.getElementById("resTitle").innerHTML = type.name;
         document.getElementById("resTypeImage").src = "types/" + result.code + ".png";
     document.getElementById("resSub").textContent = type.sub;
