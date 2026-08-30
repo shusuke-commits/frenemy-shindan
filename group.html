@@ -72,6 +72,13 @@
   }
   .btn-primary{color:var(--void); background:linear-gradient(100deg, var(--mask-friend-soft), var(--mask-friend)); box-shadow:0 16px 34px rgba(232,163,61,0.25);}
   .btn-secondary{color:var(--ink); background:rgba(244,236,223,0.06); border:1px solid var(--hairline);}
+
+    .g-share-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+    .g-share-row .btn-secondary{flex:1; min-width:100px; padding:11px 12px; font-size:13px;}
+    .g-share-status{font-size:12px; color:rgba(244,236,223,0.55); margin:8px 0 0; min-height:16px;}
+    .g-next-card h2{margin-bottom:14px;}
+    .g-next-row{display:flex; gap:10px; flex-wrap:wrap;}
+    .g-next-row .btn-secondary{flex:1; min-width:140px; text-align:center; text-decoration:none; padding:12px;}
   .btn-primary:disabled{opacity:0.4; box-shadow:none;}
   .btn-primary:hover, .btn-secondary:hover{transform:translateY(-2px);}
   .btn-row{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
@@ -137,6 +144,12 @@
     background:rgba(244,236,223,0.03); border:1px solid var(--hairline); margin-bottom:10px;
   }
   .rank-item.top{border-color:rgba(232,163,61,0.4); background:rgba(232,163,61,0.08);}
+    .rank-item.is-me{border-color:var(--mask-enemy); box-shadow:0 0 0 1px var(--mask-enemy) inset;}
+    .rank-me-tag{
+          display:inline-block; margin-left:8px; font-size:10px; font-weight:700; letter-spacing:0.04em;
+          color:var(--mask-enemy-soft); background:rgba(58,169,160,0.15); border-radius:999px; padding:2px 8px;
+          vertical-align:middle;
+    }
   .rank-num{font-family:var(--serif); font-weight:800; font-size:20px; color:rgba(244,236,223,0.4); width:28px; flex:none; text-align:center;}
   .rank-item.top .rank-num{color:var(--mask-friend);}
   .rank-body{flex:1;}
@@ -228,7 +241,10 @@
     <div class="room-code-display">
       <div class="rc-label">部屋コード</div>
       <div class="rc-code" id="lobbyRoomCode">------</div>
-      <button class="btn-secondary rc-link-btn" id="btnCopyRoomLink">招待リンクをコピー</button>
+            <div class="rc-btn-row">
+                      <button class="btn-secondary rc-link-btn" id="btnCopyRoomLink">招待リンクをコピー</button>
+                      <button class="btn-secondary rc-link-btn" id="btnShareRoomLine">LINEで送る</button>
+            </div>
     </div>
     <div class="g-card">
       <h2>参加者</h2>
@@ -278,8 +294,24 @@
       <h2 id="rankTitle">フレネミー度ランキング</h2>
       <ul class="rank-list" id="rankList"></ul>
     </div>
-
-    <a class="back-link" href="index.html">← 個人の診断に戻る</a>
+      <div class="g-card">
+                <h2>結果をシェアする</h2>
+              <div class="g-share-row">
+                        <button class="btn-secondary" id="btnShareGroupImage">画像でシェア</button>
+                        <button class="btn-secondary" id="btnShareGroupLine">LINEで送る</button>
+                        <button class="btn-secondary" id="btnShareGroupX">Xでシェア</button>
+              </div>
+              <button class="link-btn" id="btnDownloadGroupImage">画像を保存する</button>
+              <p class="g-share-status" id="groupShareStatus"></p>
+      </div>
+        <div class="g-card g-next-card">
+                  <h2>次はどうする？</h2>
+                <div class="g-next-row">
+                          <button class="btn-secondary" id="btnRetakeSameRoom">同じ仲間でもう一度</button>
+                </div>
+        </div>
+  
+<a class="back-link" href="index.html">← 個人の診断に戻る</a>
   </section>
 
 </div>
