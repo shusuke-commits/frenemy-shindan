@@ -299,7 +299,7 @@
                 const label = (letter === axis.left) ? axis.leftLabel : axis.rightLabel;
                 const chip = document.createElement("span");
                 chip.className = "combo-chip";
-                chip.textContent = label;
+                        chip.textContent = label + "(" + letter + ")";
                 comboWrap.appendChild(chip);
                 if(i < AXES.length - 1){
                           const sep = document.createElement("span");
