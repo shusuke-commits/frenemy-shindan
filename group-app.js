@@ -611,6 +611,7 @@ function renderGroupType(avgScores){
       const gt = GROUP_TYPES[code];
       document.getElementById("groupTypeName").textContent = gt.name;
       document.getElementById("groupTypeSub").textContent = gt.desc;
+      document.getElementById("groupTypeImage").src = "types/group/" + code + ".png";
       state.lastGroupResult = { code, name: gt.name, sub: gt.desc };
       return code;
 }
