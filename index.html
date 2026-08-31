@@ -94,12 +94,15 @@
   }
   .feature-promo-icon{font-size:14px; flex:none;}
   .meta-row{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:14px 28px; margin-bottom:44px;
-    font-size:13px; color:rgba(244,236,223,0.78); letter-spacing:0.02em; font-weight:500;
+        display:flex; flex-wrap:wrap; justify-content:center; gap:14px; margin-bottom:44px;
   }
-  .meta-row span{position:relative; padding-left:16px;}
-  .meta-row span::before{content:"◆"; position:absolute; left:0; font-size:8px; top:4px; color:var(--mask-friend);}
-
+    .meta-box{
+          display:flex; flex-direction:column; align-items:center; gap:6px; background:rgba(255,255,255,0.05);
+          border:1px solid var(--hairline); border-radius:16px; padding:14px 18px; min-width:78px;
+    }
+    .meta-box .meta-icon{font-size:20px;}
+    .meta-box .meta-label{font-size:11px; color:rgba(255,255,255,0.6);}
+    .meta-box .meta-num{font-size:16px; font-weight:800; color:var(--ink);}
   .btn-start{
     -webkit-appearance:none; appearance:none; border:none; cursor:pointer;
     font-family:var(--sans); font-weight:900; font-size:16px; letter-spacing:0.06em;
@@ -360,9 +363,9 @@
       </div>
       <p class="lede">仲良しの顔の下に、もうひとつの顔がある。<br>20の質問で、あなたの中に潜む「フレネミー気質」を4つの軸から解き明かし、16タイプの中からあなたの正体を診断します。</p>
       <div class="meta-row">
-                <span>質問数 20</span>
-              <span>所要時間 約3分</span>
-              <span>結果タイプ 16種</span>
+                <div class="meta-box"><span class="meta-icon">❓</span><span class="meta-num">20</span><span class="meta-label">質問数</span></div>
+                <div class="meta-box"><span class="meta-icon">🕐</span><span class="meta-num">3分</span><span class="meta-label">所要時間</span></div>
+                <div class="meta-box"><span class="meta-icon">👥</span><span class="meta-num">16種</span><span class="meta-label">結果タイプ</span></div>
       </div>
     
           <div class="mode-cards">
