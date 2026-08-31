@@ -59,11 +59,8 @@
 
   /* ---------- Intro ---------- */
   .intro{padding-top:14vh; text-align:center;}
-  .mask-mark{
-    width:104px; height:104px; margin:0 auto 32px;
-    position:relative;
-  }
-  .mask-mark svg{width:100%; height:100%; display:block;}
+  .hero-chars{display:flex; justify-content:center; gap:10px; margin:0 auto 24px; flex-wrap:wrap;}
+    .hero-chars img{width:64px; height:64px; object-fit:cover; border-radius:16px; box-shadow:var(--shadow-deep); border:2px solid rgba(255,255,255,0.18);}
   .eyebrow{
     font-size:12px; letter-spacing:0.32em; text-transform:uppercase;
     color:var(--mask-friend-soft); font-weight:700; margin-bottom:18px;
@@ -349,23 +346,13 @@
   <!-- INTRO -->
   <section class="screen active" id="screen-intro">
     <div class="intro">
-      <div class="mask-mark">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="maskGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#f0c47a"/>
-              <stop offset="1" stop-color="#3aa9a0"/>
-            </linearGradient>
-          </defs>
-          <path d="M50 6C25 6 10 24 10 46c0 26 17 48 40 48s40-22 40-48C90 24 75 6 50 6Z" fill="none" stroke="url(#maskGrad)" stroke-width="2.5"/>
-          <path d="M50 6V94" stroke="rgba(244,236,223,0.35)" stroke-width="1" stroke-dasharray="2 4"/>
-          <path d="M25 44c3-5 9-7 14-4" stroke="#f0c47a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M61 40c5-3 11-1 14 4" stroke="#3aa9a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M32 68c6 6 14 8 18 8" stroke="#f0c47a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M50 76c4 0 12-2 18-8" stroke="#3aa9a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="eyebrow">FRENEMY TYPE TEST</div>
+      <div class="hero-chars">
+                <img src="types/SALI.png" alt="">
+                <img src="types/SDLI.png" alt="">
+                <img src="types/UALI.png" alt="">
+                <img src="types/UDLI.png" alt="">
+      </div
+              <div class="eyebrow">FRENEMY TYPE TEST</div>
                   <h1 class="title">フレネミー<span style="color:var(--accent-blue); -webkit-text-stroke:2px #ffffff;">診断!</span></h1>
       <div class="ref-banner" id="refBanner" style="display:none;">
         <span class="ref-banner-icon">👥</span>
